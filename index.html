@@ -1,0 +1,1509 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patrick Challenges</title>
+  <style>
+    :root {
+      --bg: #f6f3eb;
+      --surface: #fffdf8;
+      --surface-strong: #ffffff;
+      --ink: #1d1c1a;
+      --muted: #625d53;
+      --line: #e5dece;
+      --brand: #14532d;
+      --brand-soft: #d7f3dd;
+      --accent: #c3410a;
+      --accent-soft: #ffe6dc;
+      --danger: #9f1239;
+      --danger-soft: #ffe1ea;
+      --shadow: 0 10px 30px rgba(29, 28, 26, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background:
+        radial-gradient(1200px 500px at -10% -20%, #fbdcb8 0%, transparent 60%),
+        radial-gradient(1200px 500px at 120% -10%, #c7f0d4 0%, transparent 60%),
+        linear-gradient(180deg, #faf7f1 0%, #f4f0e6 100%);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(229, 222, 206, 0.9);
+      background: rgba(255, 253, 248, 0.82);
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand {
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .score-pill {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-weight: 800;
+      background: var(--surface-strong);
+      box-shadow: var(--shadow);
+      white-space: nowrap;
+    }
+
+    .layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 22px 18px 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+      padding-right: 320px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+    }
+
+    .card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .small {
+      font-size: 0.83rem;
+      color: var(--muted);
+    }
+
+    button,
+    select,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    select,
+    .speed-input {
+      border-radius: 10px;
+      border: 1px solid transparent;
+    }
+
+    button {
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 120ms ease, filter 120ms ease, background 120ms ease;
+    }
+
+    button:hover {
+      filter: brightness(1.02);
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:focus-visible,
+    select:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid #0f766e;
+      outline-offset: 2px;
+    }
+
+    .primary {
+      background: var(--brand);
+      color: #fff;
+      border-color: #0f3f22;
+    }
+
+    .secondary {
+      background: var(--brand-soft);
+      color: #11351f;
+      border-color: #89c99b;
+    }
+
+    .danger {
+      background: var(--danger-soft);
+      color: #6f0d27;
+      border-color: #f7b4c7;
+    }
+
+    #rantOpen {
+      background: linear-gradient(180deg, #0a1224 0%, #070d1a 100%);
+      color: #e7f9ff;
+      border: 1px solid rgba(78, 210, 255, 0.55);
+      border-radius: 14px;
+      padding: 10px 16px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      box-shadow:
+        inset 0 1px 0 rgba(200, 246, 255, 0.2),
+        0 0 0 1px rgba(20, 128, 170, 0.25),
+        0 8px 24px rgba(7, 26, 44, 0.45);
+    }
+
+    #rantOpen:hover {
+      border-color: rgba(90, 226, 255, 0.85);
+      box-shadow:
+        inset 0 1px 0 rgba(220, 250, 255, 0.32),
+        0 0 0 1px rgba(39, 185, 232, 0.35),
+        0 10px 28px rgba(10, 37, 62, 0.52);
+    }
+
+    #laughBtn {
+      background: linear-gradient(180deg, #f7de7a 0%, #e9b847 100%);
+      color: #3b2a08;
+      border: 1px solid #c6922a;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      box-shadow: inset 0 1px 0 rgba(255, 245, 206, 0.8), 0 8px 18px rgba(123, 87, 17, 0.25);
+    }
+
+    #laughBtn:hover {
+      border-color: #b9821b;
+      box-shadow: inset 0 1px 0 rgba(255, 247, 214, 0.9), 0 10px 22px rgba(123, 87, 17, 0.3);
+    }
+
+    #moodBtn {
+      background: linear-gradient(180deg, #d7f7e4 0%, #9ee8bb 100%);
+      color: #123621;
+      border: 1px solid #56b984;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      box-shadow: inset 0 1px 0 rgba(245, 255, 250, 0.95), 0 8px 18px rgba(28, 117, 67, 0.24);
+    }
+
+    #moodBtn:hover {
+      border-color: #2f9f67;
+      box-shadow: inset 0 1px 0 rgba(250, 255, 252, 0.95), 0 10px 22px rgba(28, 117, 67, 0.3);
+    }
+
+    .speed-question {
+      font-size: 1.48rem;
+      font-weight: 900;
+      margin: 10px 0;
+      min-height: 2.2rem;
+    }
+
+    .speed-input {
+      min-width: 120px;
+      text-align: center;
+      font-weight: 800;
+      padding: 10px;
+      border-color: var(--line);
+      background: var(--surface-strong);
+      color: var(--ink);
+    }
+
+    .reaction-btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+    }
+
+    .riddle-question {
+      font-size: 1.1rem;
+      font-weight: 800;
+      margin: 10px 0;
+      min-height: 3.1rem;
+    }
+
+    .riddle-input {
+      flex: 1;
+      min-width: 170px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .sudoku-grid {
+      display: grid;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      border: 1px solid #d5ccb7;
+      border-radius: 12px;
+      overflow: hidden;
+      user-select: none;
+      background: #fefdf8;
+    }
+
+    .sudoku-cell {
+      aspect-ratio: 1;
+      border: 1px solid #e3dccb;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+    }
+
+    .sudoku-cell:nth-child(9n + 3),
+    .sudoku-cell:nth-child(9n + 6) {
+      border-right-color: #bdb398;
+      border-right-width: 2px;
+    }
+
+    .sudoku-cell:nth-child(n + 19):nth-child(-n + 27),
+    .sudoku-cell:nth-child(n + 46):nth-child(-n + 54) {
+      border-bottom-color: #bdb398;
+      border-bottom-width: 2px;
+    }
+
+    .sudoku-cell input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: transparent;
+      text-align: center;
+      font-size: 1rem;
+      color: var(--ink);
+      font-weight: 800;
+      outline: none;
+      min-width: 0;
+    }
+
+    .sudoku-cell.given {
+      background: #eef7f0;
+    }
+
+    .sudoku-cell.bad {
+      background: #ffe6ec;
+      border-color: #f5a8bd;
+    }
+
+    .sudoku-cell.good {
+      background: #e6f7ec;
+      border-color: #9bd6ac;
+    }
+
+    .board {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+      line-height: 1.65;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+    }
+
+    #leaderboardCard {
+      position: fixed;
+      top: 78px;
+      right: 18px;
+      width: 286px;
+      z-index: 15;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(30, 27, 18, 0.6);
+      z-index: 999;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-card {
+      width: min(560px, 96vw);
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: 0 30px 60px rgba(22, 19, 13, 0.35);
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #rantModal .modal-card {
+      width: min(980px, 97vw);
+      background:
+        radial-gradient(700px 260px at 20% -40%, rgba(53, 87, 170, 0.3), transparent 70%),
+        linear-gradient(180deg, #070c1a 0%, #040915 100%);
+      border-color: rgba(86, 111, 170, 0.45);
+      color: #f4f7ff;
+    }
+
+    #rantModal .small {
+      color: #bac6e3;
+    }
+
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .modal-top b {
+      font-size: 0.95rem;
+      letter-spacing: 0.02em;
+    }
+
+    .modal-body {
+      margin-top: 8px;
+      color: #3f3a31;
+      line-height: 1.45;
+    }
+
+    .modal.mood-popup #modalBody {
+      font-size: clamp(2rem, 5.6vw, 3.6rem);
+      line-height: 1.08;
+      font-weight: 900;
+      text-align: center;
+      color: #0f172a;
+      letter-spacing: 0.01em;
+      padding: 16px 10px 8px;
+    }
+
+    .mood-overlay {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background:
+        radial-gradient(1100px 700px at 50% 50%, rgba(255, 0, 132, 0.14), rgba(0, 0, 0, 0.88)),
+        rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(3px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease;
+      z-index: 1200;
+    }
+
+    .mood-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .mood-overlay-text {
+      margin: 0;
+      text-align: center;
+      font-size: clamp(2.3rem, 8vw, 6.5rem);
+      line-height: 1.05;
+      font-weight: 1000;
+      letter-spacing: 0.01em;
+      color: #ff4bb3;
+      text-shadow:
+        0 0 18px rgba(255, 60, 170, 0.45),
+        0 0 40px rgba(255, 38, 152, 0.35);
+      transform: scale(0.96);
+      animation: mood-pop 260ms ease forwards;
+    }
+
+    @keyframes mood-pop {
+      from {
+        transform: scale(0.96);
+        opacity: 0.6;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .modal-x {
+      width: 38px;
+      height: 32px;
+      padding: 0;
+      font-size: 1rem;
+    }
+
+    .rant-field {
+      width: 100%;
+      resize: vertical;
+      min-height: 220px;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(113, 131, 170, 0.45);
+      background: rgba(4, 8, 20, 0.9);
+      color: #eaf2ff;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .rant-field::placeholder {
+      color: #9aa7c8;
+      font-weight: 500;
+    }
+
+    .rage-wrap {
+      position: relative;
+    }
+
+    .fire-layer {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 2;
+    }
+
+    .fire-particle {
+      position: absolute;
+      bottom: 10px;
+      width: 8px;
+      height: 18px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffe08a 0%, #ff7a1a 60%, #d83606 100%);
+      opacity: 0.9;
+      filter: blur(0.2px);
+      animation: fire-rise 800ms ease-out forwards;
+    }
+
+    @keyframes fire-rise {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-90px) scale(0.6);
+        opacity: 0;
+      }
+    }
+
+    @keyframes rage-shake {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      20% { transform: translate(-1px, 2px) rotate(-0.5deg); }
+      40% { transform: translate(2px, -1px) rotate(0.5deg); }
+      60% { transform: translate(-2px, 1px) rotate(-0.4deg); }
+      80% { transform: translate(1px, -2px) rotate(0.4deg); }
+      100% { transform: translate(0, 0) rotate(0deg); }
+    }
+
+    .rage-shake {
+      animation: rage-shake 260ms ease;
+    }
+
+    .flame-stage {
+      display: none;
+      position: relative;
+      margin-top: 12px;
+      border-radius: 12px;
+      border: 1px solid #dfd6c3;
+      padding: 12px;
+      overflow: hidden;
+      background: #fff6f1;
+    }
+
+    .burn-text {
+      white-space: pre-wrap;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      color: #d9e5ff;
+    }
+
+    .rage-actions {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .rage-btn {
+      border-radius: 18px;
+      padding: 12px 20px;
+      font-size: 1.05rem;
+      font-weight: 900;
+      border: 1px solid rgba(114, 132, 179, 0.7);
+      background: rgba(8, 15, 36, 0.84);
+      color: #eef3ff;
+      box-shadow: 0 0 0 1px rgba(20, 40, 88, 0.3), 0 8px 24px rgba(5, 10, 26, 0.35);
+    }
+
+    .rage-btn-main {
+      background: linear-gradient(180deg, #2258b2 0%, #163f85 100%);
+      border-color: rgba(110, 170, 255, 0.75);
+      color: #ffffff;
+    }
+
+    .rage-btn-burn {
+      background: linear-gradient(180deg, #7a2d06 0%, #4e1a03 100%);
+      border-color: rgba(255, 151, 74, 0.7);
+    }
+
+    .flames {
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 70px;
+      background:
+        radial-gradient(circle at 10% 80%, rgba(255, 70, 0, 0.84), transparent 55%),
+        radial-gradient(circle at 30% 90%, rgba(255, 190, 0, 0.9), transparent 60%),
+        radial-gradient(circle at 55% 85%, rgba(255, 70, 0, 0.82), transparent 55%),
+        radial-gradient(circle at 75% 95%, rgba(255, 200, 0, 0.82), transparent 60%),
+        radial-gradient(circle at 92% 80%, rgba(255, 70, 0, 0.78), transparent 55%);
+      filter: blur(0.3px);
+      animation: flame-move 350ms infinite alternate ease-in-out;
+      opacity: 0.95;
+    }
+
+    .burn-fade {
+      animation: burn-fade 1.2s ease forwards;
+    }
+
+    @keyframes flame-move {
+      from {
+        transform: translateY(2px) scaleY(1);
+      }
+      to {
+        transform: translateY(-3px) scaleY(1.08);
+      }
+    }
+
+    @keyframes burn-fade {
+      0% {
+        opacity: 1;
+        filter: none;
+        transform: none;
+      }
+      60% {
+        opacity: 0.5;
+        filter: blur(1px);
+      }
+      100% {
+        opacity: 0;
+        filter: blur(2px);
+        transform: translateY(-9px);
+      }
+    }
+
+    @media (max-width: 740px) {
+      .layout {
+        grid-template-columns: 1fr;
+        padding-top: 16px;
+        padding-right: 18px;
+      }
+
+      .topbar-inner {
+        padding: 12px 14px;
+      }
+
+      .brand {
+        font-size: 0.92rem;
+      }
+
+      .score-pill {
+        font-size: 0.88rem;
+      }
+
+      #leaderboardCard {
+        position: static;
+        width: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">Patrick Challenges</div>
+      <div class="topbar-actions">
+        <button id="moodBtn" type="button">MOOD BOOST</button>
+        <button id="laughBtn" type="button">LE</button>
+        <button class="danger" id="rantOpen" type="button">UTBLÅSING</button>
+        <div class="score-pill" aria-live="polite">Score: <span id="score">0</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card" aria-labelledby="speed-title">
+      <h2 id="speed-title">60-sekunders Speed Mode</h2>
+      <p>Løs så mange oppgaver du klarer på 60 sekunder.</p>
+
+      <div class="row">
+        <button class="primary" id="speedStart" type="button">Start</button>
+        <span class="small">Tid igjen: <b id="speedTime">60</b>s</span>
+        <span class="small">Runde-poeng: <b id="speedScore">0</b></span>
+      </div>
+
+      <div class="speed-question" id="speedQuestion" aria-live="polite">Klar?</div>
+
+      <div class="row">
+        <input class="speed-input" id="speedAnswer" placeholder="Svar..." inputmode="numeric" disabled />
+        <button class="secondary" id="speedSubmit" type="button" disabled>Svar</button>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="reaction-title">
+      <h2 id="reaction-title">Reaction Time</h2>
+      <p>Trykk start. Vent. Klikk når det står <b>KLIKK!</b> (ikke før).</p>
+      <button id="reactionBtn" class="primary reaction-btn" type="button">Start</button>
+      <div class="small" style="margin-top: 10px;" id="reactionResult">Siste: -</div>
+    </section>
+
+    <section class="card" aria-labelledby="sudoku-title">
+      <h2 id="sudoku-title">Sudoku Generator</h2>
+      <p>Generer nytt brett, sjekk feil, eller se løsning hvis du gir opp.</p>
+
+      <div class="row" style="margin-bottom: 10px;">
+        <label for="difficulty" class="small">Vanskelighet:</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <div class="sudoku-grid" id="sudokuGrid" aria-label="Sudoku-brett"></div>
+
+      <div class="row" style="margin-top: 12px;">
+        <button class="primary" id="sudokuNew" type="button">Ny sudoku</button>
+        <button class="secondary" id="sudokuCheck" type="button">Sjekk</button>
+        <button id="sudokuClear" type="button">Tøm mine felt</button>
+        <button class="danger" id="sudokuSolve" type="button">Vis løsning</button>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="riddle-title">
+      <h2 id="riddle-title">Gåtespill</h2>
+      <p>Løs gåter, bruk hint når du står fast, og se hvor mange du tar på rad.</p>
+
+      <div class="row">
+        <span class="small">Løst: <b id="riddleSolved">0</b></span>
+      </div>
+
+      <div id="riddleQuestion" class="riddle-question">Trykk ny gåte for å starte.</div>
+
+      <div class="row">
+        <input id="riddleAnswer" class="riddle-input" placeholder="Skriv svaret..." />
+        <button class="secondary" id="riddleSubmit" type="button">Svar</button>
+      </div>
+
+      <div class="row" style="margin-top: 10px;">
+        <button id="riddleHint" type="button">Hint</button>
+        <button class="primary" id="riddleNext" type="button">Ny gåte</button>
+      </div>
+      <div id="riddleFeedback" class="small" style="margin-top: 10px;">Klar for første gåte.</div>
+    </section>
+
+    <section class="card" id="leaderboardCard" aria-labelledby="leaderboard-title">
+      <h2 id="leaderboard-title">Leaderboard</h2>
+      <p>Slå deg selv. Og helst alle andre.</p>
+
+      <div class="board">
+        Best Reaction: <span id="bestReaction">-</span><br />
+        Best Speed Score: <span id="bestSpeed">-</span><br />
+        Sudoku Wins: <span id="sudokuWins">0</span>
+      </div>
+
+      <div class="row" style="margin-top: 12px;">
+        <button class="danger" id="resetStats" type="button">Reset rekorder</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div>
+          <b id="modalTitle">Melding</b>
+          <div class="small" id="modalSub">PatrickOS</div>
+        </div>
+        <button class="danger modal-x" id="modalX" title="Lukk" type="button">x</button>
+      </div>
+      <div class="modal-body" id="modalBody">...</div>
+      <div class="modal-actions">
+        <button class="primary" id="modalOk" type="button">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="rantModal" role="dialog" aria-modal="true" aria-labelledby="rantModalTitle">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div>
+          <b id="rantModalTitle">VENTILASJON AKTIVERT</b>
+          <div class="small">Skriv alt du vil. Ingen lagring. Null konsekvenser. (utenom bedre humør)</div>
+        </div>
+        <button class="danger modal-x" id="rantX" title="Lukk" type="button">x</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="rage-wrap">
+          <textarea id="rantText" class="rant-field" placeholder="Skriv her... alt som irriterer deg akkurat nå."></textarea>
+          <div id="fireLayer" class="fire-layer" aria-hidden="true"></div>
+        </div>
+
+        <div id="flameStage" class="flame-stage" aria-hidden="true">
+          <div style="font-weight: 900; margin-bottom: 6px;">Brenner rant...</div>
+          <div id="burnText" class="burn-text"></div>
+          <div class="flames"></div>
+        </div>
+
+        <div class="rage-actions">
+          <button id="rageScream" class="rage-btn rage-btn-main" type="button">SKRIK (trygt)</button>
+          <button id="rageComment" class="rage-btn" type="button">Gi meg en “kommentar”</button>
+          <button id="rantBurn" class="rage-btn rage-btn-burn" type="button">Brenn teksten 🔥</button>
+          <button id="rageDone" class="rage-btn" type="button">Jeg er ferdig</button>
+        </div>
+        <div class="small" style="margin-top: 10px;">Tips: Trykk R for å åpne raskt. ESC lukker.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mood-overlay" id="moodOverlay" aria-hidden="true">
+    <p class="mood-overlay-text" id="moodOverlayText">Du er enestående.</p>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const byId = (id) => document.getElementById(id);
+
+      let score = 0;
+      const scoreEl = byId("score");
+      const addScore = (n) => {
+        score += n;
+        scoreEl.textContent = String(score);
+      };
+
+      const modal = byId("modal");
+      const modalTitle = byId("modalTitle");
+      const modalSub = byId("modalSub");
+      const modalBody = byId("modalBody");
+      const modalOk = byId("modalOk");
+      const modalX = byId("modalX");
+      const moodBtn = byId("moodBtn");
+      const laughBtn = byId("laughBtn");
+      const moodOverlay = byId("moodOverlay");
+      const moodOverlayText = byId("moodOverlayText");
+
+      const showPopup = (title, body, sub = "PatrickOS", options = {}) => {
+        const moodMode = Boolean(options.moodMode);
+        modal.classList.toggle("mood-popup", moodMode);
+        modalTitle.textContent = title;
+        modalBody.textContent = body;
+        modalSub.textContent = sub;
+        modal.classList.add("show");
+      };
+      const closePopup = () => {
+        modal.classList.remove("show");
+        modal.classList.remove("mood-popup");
+      };
+      const toast = (title, body) => showPopup(title, body, "Rant");
+      const setDopamine = (value) => addScore(value);
+
+      modalOk.addEventListener("click", closePopup);
+      modalX.addEventListener("click", closePopup);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closePopup();
+      });
+
+      const moodBoostLines = [
+        "Du er et icon!",
+        "Du er rå!",
+        "Du eier fuckings hele verden",
+        "Slay!",
+        "Du slayer hardt i dag",
+        "Du er så kjekk i dag",
+        "I dag er et fashion icon",
+        "Ingen kan måle seg med deg",
+        "Du er en god kollega",
+        "Du hjelper alltid"
+      ];
+
+      let moodTimer = null;
+
+      const showMoodOverlay = (line) => {
+        moodOverlayText.textContent = line;
+        moodOverlay.classList.remove("show");
+        void moodOverlay.offsetWidth;
+        moodOverlay.classList.add("show");
+
+        if (moodTimer) clearTimeout(moodTimer);
+        moodTimer = setTimeout(() => {
+          moodOverlay.classList.remove("show");
+        }, 1700);
+      };
+
+      const showMoodBoost = () => {
+        const line = moodBoostLines[Math.floor(Math.random() * moodBoostLines.length)];
+        showMoodOverlay(line);
+        addScore(1);
+      };
+
+      moodBtn.addEventListener("click", showMoodBoost);
+      moodOverlay.addEventListener("click", () => moodOverlay.classList.remove("show"));
+
+      const customerServiceJokes = [
+        "Kunde: «Volvo-app’en finner ikke bilen.» Support: «Hvor står den?» Kunde: «I P-huset.» Support: «Da spiller dere begge gjemsel med premium-abonnement.»",
+        "Kunde: «Polestar vil oppdatere igjen.» Support: «Når oppdaterte du sist?» Kunde: «I går.» Support: «Flott, bilen din har flere release cycles enn IT-avdelingen.»",
+        "Kunde: «Zeekr låser seg ikke opp.» Support: «Har du mobilen med?» Kunde: «Ja.» Support: «Låst opp?» Kunde: «Nei.» Support: «Bilen speiler bare brukerreisen.»",
+        "Kunde: «Volvoen piper konstant.» Support: «Setebelte på?» Kunde: «Ja.» Support: «Da er det nok bilen som live-kommenterer kjøringa.»",
+        "Kunde: «Polestar sier 2% batteri, men jeg er rolig.» Support: «Imponerende.» Kunde: «Takk.» Support: «Bilen er mindre rolig. Den skriver avskjedsbrev.»",
+        "Kunde: «Zeekr-skjermen frøs.» Support: «Prøv restart.» Kunde: «Av bilen?» Support: «Start med forventningene, jobb deg oppover.»",
+        "Kunde: «Volvo sier ‘Hold hendene på rattet’.» Support: «Har du hendene på rattet?» Kunde: «Ja.» Support: «Supert. Nå vil den bare ha emosjonell støtte også.»",
+        "Kunde: «Polestar stopper lading på 80%.» Support: «Ladetak satt til 80?» Kunde: «Ja.» Support: «Da fungerer systemet. Ubehagelig, men sant.»",
+        "Kunde: «Zeekr ga meg 14 varsler på én tur.» Support: «Noe kritisk?» Kunde: «Nei, men den minnet meg på alt unntatt bursdagen til svigermor.»",
+        "Kunde: «Hvem har mest personlighet: Volvo, Polestar eller Zeekr?» Support: «Den med 1% batteri på E6. Da får alle i bilen karakterutvikling.»"
+      ];
+      let jokeBag = [];
+
+      const refillJokes = () => {
+        jokeBag = customerServiceJokes
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map((item) => item.value);
+      };
+
+      const showNextJoke = () => {
+        if (!jokeBag.length) refillJokes();
+        const joke = jokeBag.pop();
+        showPopup("Kundesenter-vits", joke, "LE");
+        addScore(1);
+      };
+
+      laughBtn.addEventListener("click", showNextJoke);
+
+      const SPEED_BEST_KEY = "patrick_speed_best_v1";
+      const REACT_BEST_KEY = "patrick_react_best_v1";
+      const SUDOKU_WINS_KEY = "patrick_sudoku_wins_v1";
+
+      const bestSpeedEl = byId("bestSpeed");
+      const bestReactionEl = byId("bestReaction");
+      const sudokuWinsEl = byId("sudokuWins");
+
+      const refreshLeaderboard = () => {
+        const bestSpeed = localStorage.getItem(SPEED_BEST_KEY);
+        const bestReact = localStorage.getItem(REACT_BEST_KEY);
+        const wins = Number(localStorage.getItem(SUDOKU_WINS_KEY) || 0);
+
+        bestSpeedEl.textContent = bestSpeed ?? "-";
+        bestReactionEl.textContent = bestReact ? `${bestReact} ms` : "-";
+        sudokuWinsEl.textContent = String(wins);
+      };
+      refreshLeaderboard();
+
+      const speedStart = byId("speedStart");
+      const speedTimeEl = byId("speedTime");
+      const speedScoreEl = byId("speedScore");
+      const speedQuestion = byId("speedQuestion");
+      const speedAnswer = byId("speedAnswer");
+      const speedSubmit = byId("speedSubmit");
+
+      let speedTimer = null;
+      let timeLeft = 60;
+      let roundScore = 0;
+      let correctAnswer = null;
+      let speedActive = false;
+
+      const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+      const newTask = () => {
+        const type = Math.random();
+
+        if (type < 0.45) {
+          const a = randInt(5, 40);
+          const b = randInt(5, 40);
+          correctAnswer = a + b;
+          speedQuestion.textContent = `${a} + ${b} = ?`;
+          return;
+        }
+
+        if (type < 0.75) {
+          const n = randInt(4, 9);
+          correctAnswer = n;
+          speedQuestion.textContent = `${"▲ ".repeat(n)}= hvor mange?`;
+          return;
+        }
+
+        const w = pick(["SNUS", "MATPAUSE", "STIM", "SPEEDRUN", "PATRICK", "KAFFE"]);
+        correctAnswer = w.length;
+        speedQuestion.textContent = `${w} -> antall bokstaver?`;
+      };
+
+      const stopSpeedRound = () => {
+        if (speedTimer) clearInterval(speedTimer);
+        speedTimer = null;
+        speedActive = false;
+        speedAnswer.disabled = true;
+        speedSubmit.disabled = true;
+      };
+
+      const startSpeed = () => {
+        stopSpeedRound();
+
+        timeLeft = 60;
+        roundScore = 0;
+        speedActive = true;
+
+        speedTimeEl.textContent = "60";
+        speedScoreEl.textContent = "0";
+        speedAnswer.value = "";
+        speedAnswer.disabled = false;
+        speedSubmit.disabled = false;
+        speedAnswer.focus();
+        newTask();
+
+        speedTimer = setInterval(() => {
+          timeLeft -= 1;
+          speedTimeEl.textContent = String(timeLeft);
+
+          if (timeLeft > 0) return;
+
+          stopSpeedRound();
+          speedQuestion.textContent = "Tiden er ute!";
+
+          const best = Number(localStorage.getItem(SPEED_BEST_KEY) || 0);
+          if (!best || roundScore > best) {
+            localStorage.setItem(SPEED_BEST_KEY, String(roundScore));
+            showPopup("Ny Speed-rekord", `Du fikk ${roundScore} poeng. Ny best!`, "Speed Mode");
+            addScore(25);
+          } else {
+            showPopup("Speed Mode ferdig", `Du fikk ${roundScore} poeng på 60 sek.`, "Speed Mode");
+          }
+          refreshLeaderboard();
+        }, 1000);
+      };
+
+      const submitSpeed = () => {
+        if (!speedActive) return;
+
+        const v = speedAnswer.value.trim();
+        if (!v) return;
+
+        if (Number(v) === correctAnswer) {
+          roundScore += 10;
+          speedScoreEl.textContent = String(roundScore);
+          addScore(10);
+        } else {
+          addScore(-2);
+        }
+
+        speedAnswer.value = "";
+        newTask();
+        speedAnswer.focus();
+      };
+
+      speedStart.addEventListener("click", startSpeed);
+      speedSubmit.addEventListener("click", submitSpeed);
+      speedAnswer.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") submitSpeed();
+      });
+
+      const riddleQuestionEl = byId("riddleQuestion");
+      const riddleAnswerEl = byId("riddleAnswer");
+      const riddleSubmitBtn = byId("riddleSubmit");
+      const riddleHintBtn = byId("riddleHint");
+      const riddleNextBtn = byId("riddleNext");
+      const riddleFeedbackEl = byId("riddleFeedback");
+      const riddleSolvedEl = byId("riddleSolved");
+
+      const riddles = [
+        { q: "Hva blir våtere jo mer det tørker?", a: ["håndkle", "et håndkle"], h: "Du bruker det etter dusj." },
+        { q: "Jeg har nøkler, men ingen låser. Hva er jeg?", a: ["piano", "et piano", "tastatur", "et tastatur"], h: "Du spiller eller skriver på meg." },
+        { q: "Hva har hode og hale, men ingen kropp?", a: ["mynt", "en mynt"], h: "Ligger ofte i lomma." },
+        { q: "Hva kan du fange, men ikke kaste?", a: ["forkjølelse", "en forkjølelse"], h: "Ingen vil egentlig ha det." },
+        { q: "Hva går opp, men kommer aldri ned?", a: ["alder", "din alder"], h: "Den øker hvert år." },
+        { q: "Hva har mange tenner, men kan ikke bite?", a: ["kam", "en kam"], h: "Brukes i håret." },
+        { q: "Hva har fire hjul og flyr?", a: ["søppelbil", "en søppelbil"], h: "Ikke flyr i lufta." },
+        { q: "Hva kan reise rundt verden uten å forlate hjørnet?", a: ["frimerke", "et frimerke"], h: "Sitter på konvolutt." },
+        { q: "Hva har ett øye, men kan ikke se?", a: ["nål", "en nål"], h: "Brukes med tråd." },
+        { q: "Hva blir større jo mer du tar bort?", a: ["hull", "et hull"], h: "Spade hjelper." }
+      ];
+
+      let currentRiddle = null;
+      let riddlePool = [];
+      let riddleSolvedCount = 0;
+
+      const normalizeText = (text) =>
+        text
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .trim();
+
+      const refillRiddlePool = () => {
+        riddlePool = riddles
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map((item) => item.value);
+      };
+
+      const loadNextRiddle = () => {
+        if (!riddlePool.length) refillRiddlePool();
+        currentRiddle = riddlePool.pop();
+        riddleQuestionEl.textContent = currentRiddle.q;
+        riddleAnswerEl.value = "";
+        riddleFeedbackEl.textContent = "Skriv svaret og trykk Svar.";
+        riddleAnswerEl.focus();
+      };
+
+      const showHint = () => {
+        if (!currentRiddle) {
+          riddleFeedbackEl.textContent = "Start med ny gåte først.";
+          return;
+        }
+        riddleFeedbackEl.textContent = `Hint: ${currentRiddle.h}`;
+        addScore(-1);
+      };
+
+      const submitRiddle = () => {
+        if (!currentRiddle) {
+          riddleFeedbackEl.textContent = "Trykk ny gåte først.";
+          return;
+        }
+
+        const guess = normalizeText(riddleAnswerEl.value);
+        if (!guess) return;
+
+        const isCorrect = currentRiddle.a.some((answer) => normalizeText(answer) === guess);
+        if (isCorrect) {
+          riddleSolvedCount += 1;
+          riddleSolvedEl.textContent = String(riddleSolvedCount);
+          riddleFeedbackEl.textContent = "Riktig! Ny gåte klar.";
+          addScore(15);
+          loadNextRiddle();
+          return;
+        }
+
+        riddleFeedbackEl.textContent = "Feil svar. Prøv igjen eller bruk hint.";
+        addScore(-2);
+      };
+
+      riddleNextBtn.addEventListener("click", loadNextRiddle);
+      riddleHintBtn.addEventListener("click", showHint);
+      riddleSubmitBtn.addEventListener("click", submitRiddle);
+      riddleAnswerEl.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") submitRiddle();
+      });
+
+      const reactionBtn = byId("reactionBtn");
+      const reactionResult = byId("reactionResult");
+      let reactTimeout = null;
+      let reactGoAt = 0;
+      let reactState = "idle";
+
+      const setReactionBtn = (text, cls) => {
+        reactionBtn.textContent = text;
+        reactionBtn.classList.remove("danger", "secondary", "primary");
+        reactionBtn.classList.add(cls);
+      };
+
+      const startReaction = () => {
+        if (reactTimeout) clearTimeout(reactTimeout);
+
+        reactState = "waiting";
+        setReactionBtn("Vent...", "secondary");
+
+        const delay = Math.floor(Math.random() * 2500) + 900;
+        reactTimeout = setTimeout(() => {
+          reactState = "go";
+          reactGoAt = performance.now();
+          setReactionBtn("KLIKK!", "primary");
+        }, delay);
+      };
+
+      reactionBtn.addEventListener("click", () => {
+        if (reactState === "idle") {
+          startReaction();
+          return;
+        }
+
+        if (reactState === "waiting") {
+          if (reactTimeout) clearTimeout(reactTimeout);
+          reactTimeout = null;
+          reactState = "idle";
+          setReactionBtn("For tidlig... Start", "danger");
+          reactionResult.textContent = "Siste: -";
+          showPopup("For tidlig!", "Du klikka før signalet.", "Reaction");
+          addScore(-5);
+          return;
+        }
+
+        if (reactState === "go") {
+          const ms = Math.round(performance.now() - reactGoAt);
+          reactState = "idle";
+          setReactionBtn("Start", "primary");
+          reactionResult.textContent = `Siste: ${ms} ms`;
+          addScore(10);
+
+          const best = Number(localStorage.getItem(REACT_BEST_KEY) || 0);
+          if (!best || ms < best) {
+            localStorage.setItem(REACT_BEST_KEY, String(ms));
+            showPopup("Ny reaksjonsrekord", `${ms} ms`, "Reaction");
+            addScore(20);
+          }
+
+          refreshLeaderboard();
+        }
+      });
+
+      const sudokuGridEl = byId("sudokuGrid");
+      const sudokuNewBtn = byId("sudokuNew");
+      const sudokuCheckBtn = byId("sudokuCheck");
+      const sudokuSolveBtn = byId("sudokuSolve");
+      const sudokuClearBtn = byId("sudokuClear");
+      const diffEl = byId("difficulty");
+
+      let solution = null;
+      let puzzle = null;
+      let cells = [];
+      let sudokuWinAwarded = false;
+
+      const makeEmpty = () => Array.from({ length: 9 }, () => Array(9).fill(0));
+      const cloneBoard = (b) => b.map((r) => r.slice());
+
+      const shuffle = (arr) => {
+        for (let i = arr.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      };
+
+      const isValid = (board, r, c, n) => {
+        for (let i = 0; i < 9; i += 1) {
+          if (board[r][i] === n) return false;
+          if (board[i][c] === n) return false;
+        }
+
+        const br = Math.floor(r / 3) * 3;
+        const bc = Math.floor(c / 3) * 3;
+        for (let rr = br; rr < br + 3; rr += 1) {
+          for (let cc = bc; cc < bc + 3; cc += 1) {
+            if (board[rr][cc] === n) return false;
+          }
+        }
+        return true;
+      };
+
+      const solveBoard = (board) => {
+        for (let r = 0; r < 9; r += 1) {
+          for (let c = 0; c < 9; c += 1) {
+            if (board[r][c] !== 0) continue;
+
+            const nums = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+            for (const n of nums) {
+              if (!isValid(board, r, c, n)) continue;
+
+              board[r][c] = n;
+              if (solveBoard(board)) return true;
+              board[r][c] = 0;
+            }
+            return false;
+          }
+        }
+        return true;
+      };
+
+      const generateSudoku = (difficulty) => {
+        const full = makeEmpty();
+        solveBoard(full);
+        const p = cloneBoard(full);
+
+        let holes = 40;
+        if (difficulty === "easy") holes = 32;
+        if (difficulty === "hard") holes = 52;
+
+        let removed = 0;
+        while (removed < holes) {
+          const r = Math.floor(Math.random() * 9);
+          const c = Math.floor(Math.random() * 9);
+          if (p[r][c] === 0) continue;
+          p[r][c] = 0;
+          removed += 1;
+        }
+
+        return { full, puzzle: p };
+      };
+
+      const buildSudokuUI = () => {
+        sudokuGridEl.innerHTML = "";
+        cells = [];
+
+        for (let r = 0; r < 9; r += 1) {
+          for (let c = 0; c < 9; c += 1) {
+            const wrap = document.createElement("div");
+            wrap.className = "sudoku-cell";
+
+            const input = document.createElement("input");
+            input.inputMode = "numeric";
+            input.maxLength = 1;
+            input.setAttribute("aria-label", `Rad ${r + 1} kolonne ${c + 1}`);
+
+            const val = puzzle[r][c];
+            if (val !== 0) {
+              input.value = String(val);
+              input.disabled = true;
+              wrap.classList.add("given");
+            } else {
+              input.value = "";
+              input.disabled = false;
+            }
+
+            input.addEventListener("input", () => {
+              input.value = input.value.replace(/[^1-9]/g, "").slice(0, 1);
+              wrap.classList.remove("bad", "good");
+            });
+
+            wrap.appendChild(input);
+            sudokuGridEl.appendChild(wrap);
+            cells.push({ wrap, input, r, c });
+          }
+        }
+      };
+
+      const newSudoku = () => {
+        const generated = generateSudoku(diffEl.value);
+        solution = generated.full;
+        puzzle = generated.puzzle;
+        sudokuWinAwarded = false;
+        buildSudokuUI();
+      };
+
+      const clearUserCells = () => {
+        for (const cell of cells) {
+          if (cell.input.disabled) continue;
+          cell.input.value = "";
+          cell.wrap.classList.remove("bad", "good");
+        }
+      };
+
+      const solveSudokuUI = () => {
+        for (const cell of cells) {
+          cell.wrap.classList.remove("bad", "good");
+          cell.input.value = String(solution[cell.r][cell.c]);
+          cell.input.disabled = true;
+        }
+        sudokuWinAwarded = true;
+        showPopup("Løsning", "Du fikk løsningen denne gangen.", "Sudoku");
+      };
+
+      const checkSudoku = () => {
+        let wrong = 0;
+        let filled = 0;
+
+        for (const cell of cells) {
+          cell.wrap.classList.remove("bad", "good");
+          const value = cell.input.value.trim();
+          if (!value) continue;
+
+          filled += 1;
+          const n = Number(value);
+          if (n === solution[cell.r][cell.c]) {
+            cell.wrap.classList.add("good");
+          } else {
+            cell.wrap.classList.add("bad");
+            wrong += 1;
+          }
+        }
+
+        if (filled < 81) {
+          showPopup("Sjekk", `Utfylt ${filled}/81. Feil: ${wrong}`, "Sudoku");
+          return;
+        }
+
+        if (wrong !== 0) {
+          showPopup("Nesten!", `Du har ${wrong} feil. Rett opp og sjekk igjen.`, "Sudoku");
+          return;
+        }
+
+        if (!sudokuWinAwarded) {
+          addScore(120);
+          const wins = Number(localStorage.getItem(SUDOKU_WINS_KEY) || 0) + 1;
+          localStorage.setItem(SUDOKU_WINS_KEY, String(wins));
+          sudokuWinAwarded = true;
+          refreshLeaderboard();
+        }
+
+        showPopup("Sudoku løst", "Du knuste den. Respekt.", "Sudoku");
+      };
+
+      sudokuNewBtn.addEventListener("click", newSudoku);
+      sudokuCheckBtn.addEventListener("click", checkSudoku);
+      sudokuSolveBtn.addEventListener("click", solveSudokuUI);
+      sudokuClearBtn.addEventListener("click", clearUserCells);
+
+      byId("resetStats").addEventListener("click", () => {
+        localStorage.removeItem(SPEED_BEST_KEY);
+        localStorage.removeItem(REACT_BEST_KEY);
+        localStorage.removeItem(SUDOKU_WINS_KEY);
+        refreshLeaderboard();
+        showPopup("Reset", "Alle rekorder er slettet.", "Leaderboard");
+      });
+
+      const els = {
+        rageOverlay: byId("rantModal"),
+        rageOpen: byId("rantOpen"),
+        rageClose: byId("rantX"),
+        rageText: byId("rantText"),
+        rageScream: byId("rageScream"),
+        rageComment: byId("rageComment"),
+        rageDone: byId("rageDone"),
+        rageBurn: byId("rantBurn"),
+        flameStage: byId("flameStage"),
+        burnText: byId("burnText"),
+        fireLayer: byId("fireLayer")
+      };
+
+      function openRage() {
+        els.rageOverlay.style.display = "flex";
+        els.flameStage.style.display = "none";
+        els.burnText.textContent = "";
+        els.rageText.classList.remove("burn-fade");
+        setDopamine(+3);
+        setTimeout(() => els.rageText?.focus(), 50);
+      }
+
+      function closeRage() {
+        els.rageOverlay.style.display = "none";
+        setDopamine(+2);
+      }
+
+      function burnTextWithFlames() {
+        if (!els.rageText.value.trim()) {
+          toast("Brenn", "Ingen tekst å brenne. (Bra jobba?)");
+          return;
+        }
+
+        const rect = els.rageText.getBoundingClientRect();
+        els.flameStage.style.display = "block";
+        els.burnText.textContent = els.rageText.value.trim();
+        els.rageText.classList.add("burn-fade");
+        els.burnText.classList.add("burn-fade");
+
+        for (let i = 0; i < 40; i += 1) {
+          const flame = document.createElement("div");
+          flame.className = "fire-particle";
+          flame.style.left = Math.random() * rect.width + "px";
+          flame.style.animationDuration = 600 + Math.random() * 400 + "ms";
+          els.fireLayer.appendChild(flame);
+          setTimeout(() => flame.remove(), 900);
+        }
+
+        document.body.classList.remove("rage-shake");
+        void document.body.offsetWidth;
+        document.body.classList.add("rage-shake");
+
+        setTimeout(() => {
+          els.rageText.value = "";
+          els.rageText.classList.remove("burn-fade");
+          els.burnText.classList.remove("burn-fade");
+          els.burnText.textContent = "";
+          els.flameStage.style.display = "none";
+          toast("🔥 FULLSTENDIG FORBRENNT", "Sinnet ble kremert.");
+          setDopamine(+8);
+        }, 400);
+      }
+
+      function safeScream() {
+        document.body.classList.remove("rage-shake");
+        void document.body.offsetWidth;
+        document.body.classList.add("rage-shake");
+        setDopamine(+4);
+        toast("SKRIK", "Utladning registrert. Pulsen er fortsatt lovlig.");
+      }
+
+      function randomRageComment() {
+        const comments = [
+          "Du har helt rett. Dette var unødvendig kaotisk.",
+          "Sterk analyse. Svakt system.",
+          "100% gyldig frustrasjon. Fortsett.",
+          "Notert: verden kunne vært bedre strukturert.",
+          "Du håndterer dette bedre enn de fleste."
+        ];
+        const pick = comments[Math.floor(Math.random() * comments.length)];
+        setDopamine(+2);
+        toast("Kommentar", pick);
+      }
+
+      els.rageOpen.addEventListener("click", openRage);
+      els.rageClose.addEventListener("click", closeRage);
+      els.rageOverlay.addEventListener("click", (e) => {
+        if (e.target === els.rageOverlay) closeRage();
+      });
+      els.rageScream.addEventListener("click", safeScream);
+      els.rageComment.addEventListener("click", randomRageComment);
+      els.rageBurn.addEventListener("click", burnTextWithFlames);
+      els.rageDone.addEventListener("click", closeRage);
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key !== "Escape") return;
+        closePopup();
+        moodOverlay.classList.remove("show");
+        if (els.rageOverlay.style.display === "flex") closeRage();
+      });
+
+      newSudoku();
+    });
+  </script>
+</body>
+</html>
