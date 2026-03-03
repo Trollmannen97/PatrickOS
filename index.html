@@ -274,6 +274,50 @@
       font-weight: 700;
     }
 
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .pattern-pad {
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      height: 72px;
+      cursor: pointer;
+      opacity: 0.9;
+      transition: transform 90ms ease, box-shadow 120ms ease, opacity 120ms ease;
+    }
+
+    .pattern-pad:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .pattern-pad:active {
+      transform: scale(0.98);
+    }
+
+    .pattern-pad.active {
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85), 0 0 24px rgba(255, 255, 255, 0.45);
+      opacity: 1;
+      transform: scale(1.02);
+    }
+
+    .pattern-pad.pad-0 {
+      background: #ef4444;
+    }
+    .pattern-pad.pad-1 {
+      background: #3b82f6;
+    }
+    .pattern-pad.pad-2 {
+      background: #22c55e;
+    }
+    .pattern-pad.pad-3 {
+      background: #f59e0b;
+    }
+
     .sudoku-grid {
       display: grid;
       grid-template-columns: repeat(9, minmax(0, 1fr));
@@ -460,6 +504,98 @@
       to {
         transform: scale(1);
         opacity: 1;
+      }
+    }
+
+    .pic-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(6, 10, 18, 0.9);
+      backdrop-filter: blur(3px);
+      z-index: 1300;
+    }
+
+    .pic-overlay.show {
+      display: flex;
+    }
+
+    .pic-card {
+      width: min(880px, 98vw);
+      border-radius: 18px;
+      border: 1px solid rgba(113, 143, 197, 0.4);
+      background: linear-gradient(180deg, #081225 0%, #050b18 100%);
+      color: #edf3ff;
+      padding: 14px;
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .pic-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .pic-top h3 {
+      margin: 0;
+      font-size: 1.45rem;
+      letter-spacing: 0.02em;
+    }
+
+    .pic-top .small {
+      color: #b1c4ea;
+      margin-top: 4px;
+    }
+
+    .pic-grid {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .pic-option {
+      border: 1px solid rgba(122, 151, 206, 0.35);
+      border-radius: 12px;
+      padding: 8px;
+      background: rgba(14, 28, 58, 0.55);
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+    }
+
+    .pic-option:hover {
+      transform: translateY(-1px);
+      border-color: rgba(159, 194, 255, 0.7);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .pic-option img {
+      width: 100%;
+      border-radius: 10px;
+      display: block;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      background: #0a1328;
+    }
+
+    .pic-option-label {
+      margin-top: 6px;
+      font-weight: 800;
+      color: #dce8ff;
+    }
+
+    .pic-status {
+      margin-top: 10px;
+      color: #bbceef;
+    }
+
+    @media (max-width: 740px) {
+      .pic-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -753,6 +889,28 @@
       <div id="riddleFeedback" class="small" style="margin-top: 10px;">Klar for første gåte.</div>
     </section>
 
+    <section class="card" aria-labelledby="pattern-title">
+      <h2 id="pattern-title">Pattern Pop</h2>
+      <p>Se mønsteret, husk rekkefølgen, og trykk rutene i samme orden.</p>
+
+      <div class="row">
+        <span class="small">Nivå: <b id="patternLevel">0</b></span>
+      </div>
+
+      <div class="pattern-grid" id="patternGrid">
+        <button type="button" class="pattern-pad pad-0" data-pad="0" disabled aria-label="Rød"></button>
+        <button type="button" class="pattern-pad pad-1" data-pad="1" disabled aria-label="Blå"></button>
+        <button type="button" class="pattern-pad pad-2" data-pad="2" disabled aria-label="Grønn"></button>
+        <button type="button" class="pattern-pad pad-3" data-pad="3" disabled aria-label="Gul"></button>
+      </div>
+
+      <div class="row" style="margin-top: 10px;">
+        <button class="primary" id="patternStart" type="button">Start Pattern Pop</button>
+        <button id="patternReplay" type="button" disabled>Vis mønster igjen</button>
+      </div>
+      <div id="patternStatus" class="small" style="margin-top: 10px;">Trykk start for å spille.</div>
+    </section>
+
     <section class="card" id="leaderboardCard" aria-labelledby="leaderboard-title">
       <h2 id="leaderboard-title">Leaderboard</h2>
       <p>Slå deg selv. Og helst alle andre.</p>
@@ -760,6 +918,7 @@
       <div class="board">
         Best Reaction: <span id="bestReaction">-</span><br />
         Best Speed Score: <span id="bestSpeed">-</span><br />
+        Best Pattern Level: <span id="bestPattern">-</span><br />
         Sudoku Wins: <span id="sudokuWins">0</span>
       </div>
 
@@ -813,13 +972,28 @@
           <button id="rantBurn" class="rage-btn rage-btn-burn" type="button">Brenn teksten 🔥</button>
           <button id="rageDone" class="rage-btn" type="button">Jeg er ferdig</button>
         </div>
-        <div class="small" style="margin-top: 10px;">Tips: Trykk R for å åpne raskt. ESC lukker.</div>
+        <div class="small" style="margin-top: 10px;">Tips: ESC lukker.</div>
       </div>
     </div>
   </div>
 
   <div class="mood-overlay" id="moodOverlay" aria-hidden="true">
     <p class="mood-overlay-text" id="moodOverlayText">Du er enestående.</p>
+  </div>
+
+  <div class="pic-overlay" id="picOverlay" aria-hidden="true">
+    <div class="pic-card">
+      <div class="pic-top">
+        <div>
+          <h3>Hvem Skal Ut?</h3>
+          <div class="small" id="picPrompt">Finn bildet som ikke passer inn.</div>
+          <div class="small">Easter egg aktivert: skriv <b>pic</b> på tastaturet.</div>
+        </div>
+        <button class="danger modal-x" id="picClose" type="button" title="Lukk">x</button>
+      </div>
+      <div class="pic-grid" id="picGrid"></div>
+      <div class="pic-status" id="picStatus">Trykk på bildet som skal ut.</div>
+    </div>
   </div>
 
   <script>
@@ -843,6 +1017,11 @@
       const laughBtn = byId("laughBtn");
       const moodOverlay = byId("moodOverlay");
       const moodOverlayText = byId("moodOverlayText");
+      const picOverlay = byId("picOverlay");
+      const picGrid = byId("picGrid");
+      const picPrompt = byId("picPrompt");
+      const picStatus = byId("picStatus");
+      const picClose = byId("picClose");
 
       const showPopup = (title, body, sub = "PatrickOS", options = {}) => {
         const moodMode = Boolean(options.moodMode);
@@ -901,6 +1080,123 @@
       moodBtn.addEventListener("click", showMoodBoost);
       moodOverlay.addEventListener("click", () => moodOverlay.classList.remove("show"));
 
+      const picRounds = [
+        {
+          prompt: "Finn bilen som ikke er Volvo.",
+          options: [
+            { brand: "Volvo", model: "EX30", tone: "#4f7cc2", odd: false },
+            { brand: "Volvo", model: "XC60", tone: "#5f83bf", odd: false },
+            { brand: "Volvo", model: "V90", tone: "#6d8abc", odd: false },
+            { brand: "Polestar", model: "2", tone: "#8f6dd1", odd: true }
+          ]
+        },
+        {
+          prompt: "Finn bilen som ikke er Polestar.",
+          options: [
+            { brand: "Polestar", model: "2", tone: "#7f68b9", odd: false },
+            { brand: "Polestar", model: "3", tone: "#735faf", odd: false },
+            { brand: "Polestar", model: "4", tone: "#8d75c3", odd: false },
+            { brand: "Zeekr", model: "001", tone: "#1d9a90", odd: true }
+          ]
+        },
+        {
+          prompt: "Finn bilen som ikke er Zeekr.",
+          options: [
+            { brand: "Zeekr", model: "001", tone: "#13938a", odd: false },
+            { brand: "Zeekr", model: "X", tone: "#2a9f98", odd: false },
+            { brand: "Zeekr", model: "009", tone: "#2bb3a3", odd: false },
+            { brand: "Volvo", model: "C40", tone: "#4f7cc2", odd: true }
+          ]
+        }
+      ];
+      let picRoundIndex = 0;
+      let picBuffer = "";
+
+      const shuffleArray = (arr) => {
+        const copy = arr.slice();
+        for (let i = copy.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      };
+
+      const buildCarSvg = ({ brand, model, tone }) => {
+        const svg = `
+          <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 700 430'>
+            <defs>
+              <linearGradient id='g' x1='0' x2='1' y1='0' y2='1'>
+                <stop offset='0%' stop-color='${tone}'/>
+                <stop offset='100%' stop-color='#0f172a'/>
+              </linearGradient>
+            </defs>
+            <rect width='700' height='430' fill='url(#g)'/>
+            <rect x='40' y='40' width='620' height='70' rx='18' fill='rgba(255,255,255,.14)'/>
+            <text x='70' y='85' fill='#f2f7ff' font-size='42' font-family='Arial, Helvetica, sans-serif' font-weight='700'>${brand}</text>
+            <rect x='95' y='210' width='510' height='92' rx='34' fill='rgba(255,255,255,.17)'/>
+            <rect x='165' y='160' width='310' height='72' rx='24' fill='rgba(255,255,255,.22)'/>
+            <circle cx='220' cy='315' r='40' fill='#0a1021'/>
+            <circle cx='500' cy='315' r='40' fill='#0a1021'/>
+            <circle cx='220' cy='315' r='16' fill='rgba(255,255,255,.34)'/>
+            <circle cx='500' cy='315' r='16' fill='rgba(255,255,255,.34)'/>
+            <text x='70' y='385' fill='#e7efff' font-size='38' font-family='Arial, Helvetica, sans-serif' font-weight='700'>${model}</text>
+          </svg>
+        `;
+        return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+      };
+
+      const renderPicRound = () => {
+        const round = picRounds[picRoundIndex % picRounds.length];
+        const options = shuffleArray(round.options);
+        picPrompt.textContent = round.prompt;
+        picStatus.textContent = "Trykk på bildet som skal ut.";
+        picGrid.innerHTML = "";
+
+        for (const item of options) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "pic-option";
+          btn.setAttribute("aria-label", `${item.brand} ${item.model}`);
+
+          const img = document.createElement("img");
+          img.src = buildCarSvg(item);
+          img.alt = `${item.brand} ${item.model}`;
+
+          const label = document.createElement("div");
+          label.className = "pic-option-label";
+          label.textContent = `${item.brand} ${item.model}`;
+
+          btn.appendChild(img);
+          btn.appendChild(label);
+          btn.addEventListener("click", () => {
+            if (item.odd) {
+              addScore(12);
+              picStatus.textContent = "Riktig! Ny runde...";
+              picRoundIndex += 1;
+              setTimeout(renderPicRound, 500);
+            } else {
+              addScore(-3);
+              picStatus.textContent = "Nesten. Det var feil bil, prøv igjen.";
+            }
+          });
+          picGrid.appendChild(btn);
+        }
+      };
+
+      const openPicGame = () => {
+        picOverlay.classList.add("show");
+        renderPicRound();
+      };
+
+      const closePicGame = () => {
+        picOverlay.classList.remove("show");
+      };
+
+      picClose.addEventListener("click", closePicGame);
+      picOverlay.addEventListener("click", (e) => {
+        if (e.target === picOverlay) closePicGame();
+      });
+
       const customerServiceJokes = [
         "Kunde: «Volvo-app’en finner ikke bilen.» Support: «Hvor står den?» Kunde: «I P-huset.» Support: «Da spiller dere begge gjemsel med premium-abonnement.»",
         "Kunde: «Polestar vil oppdatere igjen.» Support: «Når oppdaterte du sist?» Kunde: «I går.» Support: «Flott, bilen din har flere release cycles enn IT-avdelingen.»",
@@ -933,19 +1229,23 @@
 
       const SPEED_BEST_KEY = "patrick_speed_best_v1";
       const REACT_BEST_KEY = "patrick_react_best_v1";
+      const PATTERN_BEST_KEY = "patrick_pattern_best_v1";
       const SUDOKU_WINS_KEY = "patrick_sudoku_wins_v1";
 
       const bestSpeedEl = byId("bestSpeed");
       const bestReactionEl = byId("bestReaction");
+      const bestPatternEl = byId("bestPattern");
       const sudokuWinsEl = byId("sudokuWins");
 
       const refreshLeaderboard = () => {
         const bestSpeed = localStorage.getItem(SPEED_BEST_KEY);
         const bestReact = localStorage.getItem(REACT_BEST_KEY);
+        const bestPattern = localStorage.getItem(PATTERN_BEST_KEY);
         const wins = Number(localStorage.getItem(SUDOKU_WINS_KEY) || 0);
 
         bestSpeedEl.textContent = bestSpeed ?? "-";
         bestReactionEl.textContent = bestReact ? `${bestReact} ms` : "-";
+        bestPatternEl.textContent = bestPattern ?? "-";
         sudokuWinsEl.textContent = String(wins);
       };
       refreshLeaderboard();
@@ -1144,6 +1444,126 @@
       riddleAnswerEl.addEventListener("keydown", (e) => {
         if (e.key === "Enter") submitRiddle();
       });
+
+      const patternLevelEl = byId("patternLevel");
+      const patternStatusEl = byId("patternStatus");
+      const patternStartBtn = byId("patternStart");
+      const patternReplayBtn = byId("patternReplay");
+      const patternPads = Array.from(document.querySelectorAll(".pattern-pad"));
+
+      let patternSequence = [];
+      let patternInput = [];
+      let patternLevel = 0;
+      let patternPlaying = false;
+      let patternCanInput = false;
+      let patternTimers = [];
+
+      const clearPatternTimers = () => {
+        for (const timer of patternTimers) clearTimeout(timer);
+        patternTimers = [];
+      };
+
+      const setPatternPadsEnabled = (enabled) => {
+        for (const pad of patternPads) {
+          pad.disabled = !enabled;
+        }
+      };
+
+      const flashPad = (index) => {
+        const pad = patternPads[index];
+        if (!pad) return;
+        pad.classList.add("active");
+        const t = setTimeout(() => pad.classList.remove("active"), 280);
+        patternTimers.push(t);
+      };
+
+      const startPatternInput = () => {
+        patternPlaying = false;
+        patternCanInput = true;
+        setPatternPadsEnabled(true);
+        patternReplayBtn.disabled = false;
+        patternStatusEl.textContent = "Din tur. Trykk i riktig rekkefølge.";
+      };
+
+      const playPatternSequence = () => {
+        patternPlaying = true;
+        patternCanInput = false;
+        setPatternPadsEnabled(false);
+        patternReplayBtn.disabled = true;
+        patternStatusEl.textContent = "Følg med...";
+        clearPatternTimers();
+
+        patternSequence.forEach((value, idx) => {
+          const timer = setTimeout(() => flashPad(value), idx * 520 + 200);
+          patternTimers.push(timer);
+        });
+
+        const doneTimer = setTimeout(startPatternInput, patternSequence.length * 520 + 380);
+        patternTimers.push(doneTimer);
+      };
+
+      const nextPatternRound = () => {
+        patternLevel += 1;
+        patternLevelEl.textContent = String(patternLevel);
+        patternInput = [];
+        patternSequence.push(Math.floor(Math.random() * 4));
+        playPatternSequence();
+      };
+
+      const endPatternGame = () => {
+        const best = Number(localStorage.getItem(PATTERN_BEST_KEY) || 0);
+        if (patternLevel > best) {
+          localStorage.setItem(PATTERN_BEST_KEY, String(patternLevel));
+          refreshLeaderboard();
+        }
+        patternCanInput = false;
+        patternPlaying = false;
+        setPatternPadsEnabled(false);
+        patternReplayBtn.disabled = true;
+      };
+
+      const startPatternGame = () => {
+        clearPatternTimers();
+        patternSequence = [];
+        patternInput = [];
+        patternLevel = 0;
+        patternLevelEl.textContent = "0";
+        nextPatternRound();
+      };
+
+      const handlePatternPadClick = (index) => {
+        if (!patternCanInput || patternPlaying) return;
+
+        flashPad(index);
+        patternInput.push(index);
+        const step = patternInput.length - 1;
+
+        if (patternInput[step] !== patternSequence[step]) {
+          patternStatusEl.textContent = `Bom! Du kom til nivå ${patternLevel}.`;
+          addScore(-5);
+          endPatternGame();
+          return;
+        }
+
+        if (patternInput.length === patternSequence.length) {
+          addScore(8 + patternLevel * 2);
+          patternStatusEl.textContent = "Riktig! Neste nivå...";
+          endPatternGame();
+          const timer = setTimeout(nextPatternRound, 520);
+          patternTimers.push(timer);
+        }
+      };
+
+      patternStartBtn.addEventListener("click", startPatternGame);
+      patternReplayBtn.addEventListener("click", () => {
+        if (!patternSequence.length || patternPlaying) return;
+        addScore(-1);
+        playPatternSequence();
+      });
+
+      for (const pad of patternPads) {
+        pad.addEventListener("click", () => handlePatternPadClick(Number(pad.dataset.pad)));
+      }
 
       const reactionBtn = byId("reactionBtn");
       const reactionResult = byId("reactionResult");
@@ -1395,6 +1815,7 @@
       byId("resetStats").addEventListener("click", () => {
         localStorage.removeItem(SPEED_BEST_KEY);
         localStorage.removeItem(REACT_BEST_KEY);
+        localStorage.removeItem(PATTERN_BEST_KEY);
         localStorage.removeItem(SUDOKU_WINS_KEY);
         refreshLeaderboard();
         showPopup("Reset", "Alle rekorder er slettet.", "Leaderboard");
@@ -1496,9 +1917,18 @@
       els.rageDone.addEventListener("click", closeRage);
 
       window.addEventListener("keydown", (e) => {
+        if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
+          picBuffer = (picBuffer + e.key.toLowerCase()).slice(-3);
+          if (picBuffer === "pic" && !picOverlay.classList.contains("show")) {
+            openPicGame();
+            picBuffer = "";
+          }
+        }
+
         if (e.key !== "Escape") return;
         closePopup();
         moodOverlay.classList.remove("show");
+        closePicGame();
         if (els.rageOverlay.style.display === "flex") closeRage();
       });
 
