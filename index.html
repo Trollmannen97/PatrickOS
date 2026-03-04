@@ -884,6 +884,7 @@
 
       <div class="row" style="margin-top: 10px;">
         <button id="riddleHint" type="button">Hint</button>
+        <button id="riddleSolve" class="danger" type="button">Løsning</button>
         <button class="primary" id="riddleNext" type="button">Ny gåte</button>
       </div>
       <div id="riddleFeedback" class="small" style="margin-top: 10px;">Klar for første gåte.</div>
@@ -1362,6 +1363,7 @@
       const riddleAnswerEl = byId("riddleAnswer");
       const riddleSubmitBtn = byId("riddleSubmit");
       const riddleHintBtn = byId("riddleHint");
+      const riddleSolveBtn = byId("riddleSolve");
       const riddleNextBtn = byId("riddleNext");
       const riddleFeedbackEl = byId("riddleFeedback");
       const riddleSolvedEl = byId("riddleSolved");
@@ -1376,7 +1378,13 @@
         { q: "Hva har fire hjul og flyr?", a: ["søppelbil", "en søppelbil"], h: "Ikke flyr i lufta." },
         { q: "Hva kan reise rundt verden uten å forlate hjørnet?", a: ["frimerke", "et frimerke"], h: "Sitter på konvolutt." },
         { q: "Hva har ett øye, men kan ikke se?", a: ["nål", "en nål"], h: "Brukes med tråd." },
-        { q: "Hva blir større jo mer du tar bort?", a: ["hull", "et hull"], h: "Spade hjelper." }
+        { q: "Hva blir større jo mer du tar bort?", a: ["hull", "et hull"], h: "Spade hjelper." },
+        { q: "Hva har byer, men ingen hus?", a: ["kart", "et kart"], h: "Brukes til å finne veien." },
+        { q: "Hvilken måned har 28 dager?", a: ["alle", "alle måneder", "alle maneder"], h: "Dette er en luregåte." },
+        { q: "Hva kan løpe, men aldri gå?", a: ["vann", "elv", "en elv"], h: "Finnes i bekker og elver." },
+        { q: "Hva kan fylles med luft, men aldri sprekke av ord?", a: ["ballong", "en ballong"], h: "Ofte i bursdager." },
+        { q: "Hva har hals, men ikke hode?", a: ["flaske", "en flaske"], h: "Du drikker fra den." },
+        { q: "Hva har 13 hjerter, men ingen organer?", a: ["kortstokk", "en kortstokk"], h: "Spilles på bord." }
       ];
 
       let currentRiddle = null;
@@ -1415,6 +1423,15 @@
         addScore(-1);
       };
 
+      const showRiddleSolution = () => {
+        if (!currentRiddle) {
+          riddleFeedbackEl.textContent = "Start med ny gåte først.";
+          return;
+        }
+        riddleFeedbackEl.textContent = `Løsning: ${currentRiddle.a[0]}`;
+        addScore(-5);
+      };
+
       const submitRiddle = () => {
         if (!currentRiddle) {
           riddleFeedbackEl.textContent = "Trykk ny gåte først.";
@@ -1440,6 +1457,7 @@
 
       riddleNextBtn.addEventListener("click", loadNextRiddle);
       riddleHintBtn.addEventListener("click", showHint);
+      riddleSolveBtn.addEventListener("click", showRiddleSolution);
       riddleSubmitBtn.addEventListener("click", submitRiddle);
       riddleAnswerEl.addEventListener("keydown", (e) => {
         if (e.key === "Enter") submitRiddle();
