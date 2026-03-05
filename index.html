@@ -393,6 +393,296 @@
       z-index: 15;
     }
 
+    .hyperfocus-widget {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 1500;
+      width: min(286px, calc(100vw - 24px));
+      border: 1px solid #f0c48f;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fff7ec 0%, #ffeed7 100%);
+      box-shadow: 0 14px 32px rgba(85, 44, 9, 0.2);
+      padding: 12px;
+    }
+
+    .hyperfocus-btn {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid #d2a15a;
+      background: linear-gradient(180deg, #ffdfab 0%, #f8ba5e 100%);
+      color: #4c2e07;
+      font-size: 1.02rem;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+    }
+
+    .hyperfocus-status {
+      margin-top: 10px;
+      border-radius: 10px;
+      border: 1px solid #e4be8f;
+      background: rgba(255, 255, 255, 0.7);
+      padding: 8px;
+      text-align: center;
+      font-weight: 800;
+      color: #654424;
+      letter-spacing: 0.02em;
+    }
+
+    .hyperfocus-timer-row {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hyperfocus-timer {
+      flex: 1;
+      border-radius: 10px;
+      border: 1px solid #e4be8f;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 8px;
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: #5d3610;
+    }
+
+    .hyperfocus-add {
+      border: 1px solid #d2a15a;
+      background: #ffe8c0;
+      color: #5f3911;
+      font-weight: 900;
+      border-radius: 10px;
+      padding: 10px 12px;
+      white-space: nowrap;
+    }
+
+    body.hyperfocus-mode .hyperfocus-widget {
+      inset: 0;
+      right: 0;
+      bottom: 0;
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      border-radius: 0;
+      border: none;
+      padding: clamp(20px, 4vw, 56px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      background:
+        radial-gradient(circle at center, rgba(255, 90, 90, 0.24) 0%, rgba(255, 90, 90, 0) 56%),
+        linear-gradient(180deg, #230202 0%, #130101 100%);
+      box-shadow: none;
+    }
+
+    body.hyperfocus-mode .hyperfocus-btn {
+      border-color: #ff8484;
+      background: linear-gradient(180deg, #ff5e5e 0%, #ca1111 100%);
+      color: #fff;
+      animation: pulse-alert 1s ease-in-out infinite;
+      width: min(560px, 92vw);
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      padding: 18px 24px;
+      border-radius: 18px;
+    }
+
+    body.hyperfocus-mode .hyperfocus-status {
+      border-color: rgba(255, 143, 143, 0.8);
+      background: rgba(145, 4, 4, 0.72);
+      color: #ffe2e2;
+      width: min(980px, 96vw);
+      margin-top: 0;
+      font-size: clamp(1.5rem, 5.5vw, 4.4rem);
+      line-height: 1.05;
+      padding: clamp(12px, 2vw, 26px);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    body.hyperfocus-mode .hyperfocus-timer-row {
+      width: min(720px, 94vw);
+      justify-content: center;
+      gap: 12px;
+    }
+
+    body.hyperfocus-mode .hyperfocus-timer {
+      max-width: 340px;
+      font-size: clamp(1.2rem, 3.5vw, 2.3rem);
+      padding: 12px 14px;
+      border-color: rgba(255, 143, 143, 0.8);
+      background: rgba(145, 4, 4, 0.72);
+      color: #ffe2e2;
+    }
+
+    body.hyperfocus-mode .hyperfocus-add {
+      border-color: #ff8484;
+      background: linear-gradient(180deg, #ffb2b2 0%, #ff8d8d 100%);
+      color: #4a0a0a;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      padding: 12px 16px;
+    }
+
+    body.hyperfocus-mode {
+      overflow: hidden;
+      box-shadow: inset 0 0 0 8px rgba(212, 17, 17, 0.7);
+    }
+
+    @keyframes pulse-alert {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+    }
+
+    .workmode-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 2200;
+      display: none;
+      background: #ececec;
+      color: #1e1e1e;
+      font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    }
+
+    .workmode-overlay.show {
+      display: block;
+    }
+
+    .workmode-top {
+      height: 66px;
+      border-bottom: 1px solid #d9d9d9;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .workmode-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+    }
+
+    .workmode-brand-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #1f8f55;
+      box-shadow: 0 0 0 2px rgba(31, 143, 85, 0.22);
+    }
+
+    .workmode-tools {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .workmode-search {
+      width: 280px;
+      max-width: 42vw;
+      border: 1px solid #cbcbcb;
+      border-radius: 2px;
+      background: #fff;
+      padding: 7px 10px;
+      font-size: 0.94rem;
+      color: #616161;
+    }
+
+    .workmode-button {
+      border-radius: 2px;
+      border: 1px solid #10864b;
+      background: #0f9f52;
+      color: #fff;
+      padding: 8px 14px;
+      font-weight: 800;
+    }
+
+    .workmode-hero {
+      height: 130px;
+      background:
+        linear-gradient(180deg, rgba(17, 18, 24, 0.32) 0%, rgba(17, 18, 24, 0.4) 100%),
+        linear-gradient(120deg, #687380 0%, #9da8b6 55%, #767f89 100%);
+      border-bottom: 1px solid #c8c8c8;
+    }
+
+    .workmode-main {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: calc(100vh - 196px);
+    }
+
+    .workmode-sidebar {
+      border-right: 1px solid #d0d0d0;
+      background: #efefef;
+      padding-top: 12px;
+    }
+
+    .workmode-nav-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid #d7d7d7;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .workmode-content {
+      padding: 22px;
+    }
+
+    .workmode-title {
+      margin: 0 0 14px;
+      font-size: clamp(1.4rem, 2.2vw, 2.1rem);
+      font-weight: 700;
+    }
+
+    .workmode-tabs {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .workmode-tab {
+      border: 1px solid #c2c2c2;
+      background: #f4f4f4;
+      padding: 10px 16px;
+      font-weight: 700;
+      color: #494949;
+    }
+
+    .workmode-tab.active {
+      background: #dcefe2;
+      border-color: #2b8b59;
+      color: #165939;
+    }
+
+    .workmode-note {
+      color: #666;
+      font-style: italic;
+    }
+
+    .workmode-hint {
+      position: fixed;
+      right: 14px;
+      bottom: 10px;
+      border-radius: 999px;
+      border: 1px solid #2b8b59;
+      background: #fff;
+      color: #2b8b59;
+      padding: 7px 12px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+    }
+
     .modal {
       position: fixed;
       inset: 0;
@@ -496,6 +786,62 @@
       animation: mood-pop 260ms ease forwards;
     }
 
+    .friday-overlay {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background:
+        radial-gradient(900px 520px at 50% 50%, rgba(255, 214, 10, 0.2), rgba(0, 0, 0, 0.86)),
+        rgba(0, 0, 0, 0.72);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease;
+      z-index: 1250;
+      overflow: hidden;
+    }
+
+    .friday-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .friday-text {
+      margin: 0;
+      text-align: center;
+      font-size: clamp(2rem, 7vw, 5rem);
+      line-height: 1.06;
+      font-weight: 1000;
+      letter-spacing: 0.01em;
+      color: #ffe86f;
+      text-shadow:
+        0 0 16px rgba(255, 216, 68, 0.45),
+        0 0 28px rgba(255, 120, 0, 0.35);
+      animation: friday-bounce 280ms ease forwards;
+      z-index: 2;
+    }
+
+    .friday-confetti-layer {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .friday-confetti {
+      position: absolute;
+      top: -12%;
+      width: 10px;
+      height: 16px;
+      border-radius: 2px;
+      background: #ffd84a;
+      opacity: 0.95;
+      animation: friday-fall linear forwards;
+      transform: rotate(0deg);
+    }
+
     @keyframes mood-pop {
       from {
         transform: scale(0.96);
@@ -504,6 +850,26 @@
       to {
         transform: scale(1);
         opacity: 1;
+      }
+    }
+
+    @keyframes friday-bounce {
+      from {
+        transform: scale(0.92) translateY(10px);
+        opacity: 0.5;
+      }
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes friday-fall {
+      from {
+        transform: translateY(-8vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(112vh) rotate(700deg);
       }
     }
 
@@ -795,6 +1161,35 @@
         position: static;
         width: auto;
       }
+
+      .hyperfocus-widget {
+        right: 12px;
+        bottom: 12px;
+      }
+
+      .workmode-main {
+        grid-template-columns: 1fr;
+      }
+
+      .workmode-sidebar {
+        display: none;
+      }
+
+      .workmode-content {
+        padding: 14px;
+      }
+
+      .workmode-top {
+        height: auto;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 12px;
+      }
+
+      .workmode-search {
+        width: 52vw;
+        min-width: 180px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -817,6 +1212,15 @@
       </div>
     </div>
   </header>
+
+  <aside class="hyperfocus-widget" aria-live="polite">
+    <button id="hyperfocusBtn" class="hyperfocus-btn" type="button" aria-pressed="false">HYPERFOKUS: AV</button>
+    <div id="hyperfocusStatus" class="hyperfocus-status">Klar til fokus.</div>
+    <div class="hyperfocus-timer-row">
+      <div id="hyperfocusTimer" class="hyperfocus-timer">03:00</div>
+      <button id="hyperfocusAdd" class="hyperfocus-add" type="button" disabled>+40 sek</button>
+    </div>
+  </aside>
 
   <main class="layout">
     <section class="card" aria-labelledby="speed-title">
@@ -982,6 +1386,11 @@
     <p class="mood-overlay-text" id="moodOverlayText">Du er enestående.</p>
   </div>
 
+  <div class="friday-overlay" id="fridayOverlay" aria-hidden="true">
+    <div id="fridayConfettiLayer" class="friday-confetti-layer" aria-hidden="true"></div>
+    <p class="friday-text">Fredag: hold ut, helga er nær</p>
+  </div>
+
   <div class="pic-overlay" id="picOverlay" aria-hidden="true">
     <div class="pic-card">
       <div class="pic-top">
@@ -996,6 +1405,38 @@
       <div class="pic-status" id="picStatus">Trykk på bildet som skal ut.</div>
     </div>
   </div>
+
+  <section id="workmodeOverlay" class="workmode-overlay" aria-hidden="true">
+    <div class="workmode-top">
+      <div class="workmode-brand">
+        <span class="workmode-brand-dot" aria-hidden="true"></span>
+        <span>TACDIS</span>
+      </div>
+      <div class="workmode-tools">
+        <input class="workmode-search" type="text" value="Søk arbeidsordre" aria-label="Søk arbeidsordre" readonly />
+        <button class="workmode-button" type="button">Søk</button>
+      </div>
+    </div>
+    <div class="workmode-hero" aria-hidden="true"></div>
+    <div class="workmode-main">
+      <aside class="workmode-sidebar">
+        <div class="workmode-nav-item">Min oversikt (0)</div>
+        <div class="workmode-nav-item">Webbestillinger (0)</div>
+        <div class="workmode-nav-item">Oppfølging (0)</div>
+        <div class="workmode-nav-item">Ikke fakturerte (0)</div>
+      </aside>
+      <div class="workmode-content">
+        <h2 class="workmode-title">Min oversikt</h2>
+        <div class="workmode-tabs">
+          <div class="workmode-tab">Forrige arbeidsdag (0)</div>
+          <div class="workmode-tab active">I dag (0)</div>
+          <div class="workmode-tab">Neste arbeidsdag (0)</div>
+        </div>
+        <p class="workmode-note">Finner ingen arbeidsordre</p>
+      </div>
+    </div>
+    <div class="workmode-hint">F8: tilbake til vanlig visning</div>
+  </section>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -1018,11 +1459,24 @@
       const laughBtn = byId("laughBtn");
       const moodOverlay = byId("moodOverlay");
       const moodOverlayText = byId("moodOverlayText");
+      const fridayOverlay = byId("fridayOverlay");
+      const fridayConfettiLayer = byId("fridayConfettiLayer");
       const picOverlay = byId("picOverlay");
       const picGrid = byId("picGrid");
       const picPrompt = byId("picPrompt");
       const picStatus = byId("picStatus");
       const picClose = byId("picClose");
+      const workmodeOverlay = byId("workmodeOverlay");
+      const hyperfocusBtn = byId("hyperfocusBtn");
+      const hyperfocusStatus = byId("hyperfocusStatus");
+      const hyperfocusTimer = byId("hyperfocusTimer");
+      const hyperfocusAdd = byId("hyperfocusAdd");
+      let hyperfocusActive = false;
+      let hyperfocusSeconds = 180;
+      let hyperfocusInterval = null;
+      let workmodeActive = false;
+      let fridayBuffer = "";
+      let fridayTimer = null;
 
       const showPopup = (title, body, sub = "PatrickOS", options = {}) => {
         const moodMode = Boolean(options.moodMode);
@@ -1080,6 +1534,101 @@
 
       moodBtn.addEventListener("click", showMoodBoost);
       moodOverlay.addEventListener("click", () => moodOverlay.classList.remove("show"));
+
+      const triggerFridayMode = () => {
+        if (fridayTimer) clearTimeout(fridayTimer);
+        fridayConfettiLayer.innerHTML = "";
+        const confettiColors = ["#ffd84a", "#ff6b6b", "#5be7ff", "#8cff7a", "#b68cff", "#ff9f2f"];
+
+        for (let i = 0; i < 90; i += 1) {
+          const bit = document.createElement("span");
+          bit.className = "friday-confetti";
+          bit.style.left = `${Math.random() * 100}%`;
+          bit.style.background = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+          bit.style.width = `${7 + Math.random() * 8}px`;
+          bit.style.height = `${10 + Math.random() * 12}px`;
+          bit.style.animationDuration = `${1.6 + Math.random() * 1.8}s`;
+          bit.style.animationDelay = `${Math.random() * 0.4}s`;
+          fridayConfettiLayer.appendChild(bit);
+        }
+
+        fridayOverlay.classList.remove("show");
+        void fridayOverlay.offsetWidth;
+        fridayOverlay.classList.add("show");
+
+        fridayTimer = setTimeout(() => {
+          fridayOverlay.classList.remove("show");
+          fridayConfettiLayer.innerHTML = "";
+        }, 2600);
+      };
+
+      fridayOverlay.addEventListener("click", () => {
+        fridayOverlay.classList.remove("show");
+      });
+
+      const formatHyperfocusTime = (seconds) => {
+        const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const s = String(seconds % 60).padStart(2, "0");
+        return `${m}:${s}`;
+      };
+
+      const renderHyperfocusTime = () => {
+        hyperfocusTimer.textContent = formatHyperfocusTime(hyperfocusSeconds);
+      };
+
+      const stopHyperfocusTimer = () => {
+        if (!hyperfocusInterval) return;
+        clearInterval(hyperfocusInterval);
+        hyperfocusInterval = null;
+      };
+
+      const startHyperfocusTimer = () => {
+        stopHyperfocusTimer();
+        hyperfocusInterval = setInterval(() => {
+          if (hyperfocusSeconds <= 0) {
+            stopHyperfocusTimer();
+            return;
+          }
+          hyperfocusSeconds -= 1;
+          renderHyperfocusTime();
+        }, 1000);
+      };
+
+      const setHyperfocus = (active) => {
+        hyperfocusActive = active;
+        document.body.classList.toggle("hyperfocus-mode", active);
+        hyperfocusBtn.setAttribute("aria-pressed", String(active));
+        hyperfocusBtn.textContent = active ? "HYPERFOKUS: PÅ (TRYKK FOR Å SKRU AV)" : "HYPERFOKUS: AV";
+        hyperfocusStatus.textContent = active ? "IKKE FORSTYRR. Patrick er i hyperfokus." : "Klar til fokus.";
+        hyperfocusAdd.disabled = !active;
+
+        if (active) {
+          hyperfocusSeconds = 180;
+          renderHyperfocusTime();
+          startHyperfocusTimer();
+          return;
+        }
+
+        stopHyperfocusTimer();
+        hyperfocusSeconds = 180;
+        renderHyperfocusTime();
+      };
+
+      hyperfocusBtn.addEventListener("click", () => {
+        setHyperfocus(!hyperfocusActive);
+      });
+
+      hyperfocusAdd.addEventListener("click", () => {
+        if (!hyperfocusActive) return;
+        hyperfocusSeconds += 40;
+        renderHyperfocusTime();
+      });
+
+      const setWorkmode = (active) => {
+        workmodeActive = active;
+        workmodeOverlay.classList.toggle("show", active);
+        workmodeOverlay.setAttribute("aria-hidden", String(!active));
+      };
 
       const picRounds = [
         {
@@ -1935,17 +2484,29 @@
       els.rageDone.addEventListener("click", closeRage);
 
       window.addEventListener("keydown", (e) => {
+        if (e.key === "F8") {
+          e.preventDefault();
+          setWorkmode(!workmodeActive);
+          return;
+        }
+
         if (!e.ctrlKey && !e.metaKey && !e.altKey && e.key.length === 1) {
           picBuffer = (picBuffer + e.key.toLowerCase()).slice(-3);
+          fridayBuffer = (fridayBuffer + e.key.toLowerCase()).slice(-6);
           if (picBuffer === "pic" && !picOverlay.classList.contains("show")) {
             openPicGame();
             picBuffer = "";
+          }
+          if (fridayBuffer === "fredag") {
+            triggerFridayMode();
+            fridayBuffer = "";
           }
         }
 
         if (e.key !== "Escape") return;
         closePopup();
         moodOverlay.classList.remove("show");
+        fridayOverlay.classList.remove("show");
         closePicGame();
         if (els.rageOverlay.style.display === "flex") closeRage();
       });
