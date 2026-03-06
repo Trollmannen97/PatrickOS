@@ -504,6 +504,12 @@
       white-space: nowrap;
     }
 
+    .hyperfocus-present {
+      border-color: #b68950;
+      background: #fff3dd;
+      color: #5b3a16;
+    }
+
     body.hyperfocus-mode .hyperfocus-widget {
       inset: 0;
       right: 0;
@@ -570,6 +576,12 @@
       color: #4a0a0a;
       font-size: clamp(1rem, 2vw, 1.2rem);
       padding: 12px 16px;
+    }
+
+    body.hyperfocus-mode .hyperfocus-present {
+      border-color: #ffd58f;
+      background: linear-gradient(180deg, #ffe6bc 0%, #ffc779 100%);
+      color: #4f2804;
     }
 
     body.hyperfocus-mode {
@@ -1265,6 +1277,7 @@
     <div class="hyperfocus-timer-row">
       <div id="hyperfocusTimer" class="hyperfocus-timer">03:00</div>
       <button id="hyperfocusAdd" class="hyperfocus-add" type="button" disabled>+40 sek</button>
+      <button id="hyperfocusPresent" class="hyperfocus-add hyperfocus-present" type="button" hidden disabled>Be present</button>
     </div>
   </aside>
 
@@ -1518,9 +1531,11 @@
       const hyperfocusStatus = byId("hyperfocusStatus");
       const hyperfocusTimer = byId("hyperfocusTimer");
       const hyperfocusAdd = byId("hyperfocusAdd");
+      const hyperfocusPresent = byId("hyperfocusPresent");
       let hyperfocusActive = false;
       let hyperfocusSeconds = 180;
       let hyperfocusInterval = null;
+      let hyperfocusExpired = false;
       let workmodeActive = false;
       let fridayBuffer = "";
       let fridayTimer = null;
@@ -1698,6 +1713,14 @@
         hyperfocusTimer.textContent = formatHyperfocusTime(hyperfocusSeconds);
       };
 
+      const updateHyperfocusActions = () => {
+        const canAct = hyperfocusActive;
+        hyperfocusAdd.disabled = !canAct;
+        hyperfocusPresent.disabled = !canAct || !hyperfocusExpired;
+        hyperfocusPresent.hidden = !hyperfocusExpired;
+        hyperfocusAdd.textContent = hyperfocusExpired ? "Legg til 30 sekunder" : "+40 sek";
+      };
+
       const stopHyperfocusTimer = () => {
         if (!hyperfocusInterval) return;
         clearInterval(hyperfocusInterval);
@@ -1708,7 +1731,12 @@
         stopHyperfocusTimer();
         hyperfocusInterval = setInterval(() => {
           if (hyperfocusSeconds <= 0) {
+            hyperfocusSeconds = 0;
+            renderHyperfocusTime();
+            hyperfocusExpired = true;
+            hyperfocusStatus.textContent = "TIDEN ER UTE";
             stopHyperfocusTimer();
+            updateHyperfocusActions();
             return;
           }
           hyperfocusSeconds -= 1;
@@ -1721,12 +1749,13 @@
         document.body.classList.toggle("hyperfocus-mode", active);
         hyperfocusBtn.setAttribute("aria-pressed", String(active));
         hyperfocusBtn.textContent = active ? "HYPERFOKUS: PÅ (TRYKK FOR Å SKRU AV)" : "HYPERFOKUS: AV";
+        hyperfocusExpired = false;
         hyperfocusStatus.textContent = active ? "IKKE FORSTYRR. Patrick er i hyperfokus." : "Klar til fokus.";
-        hyperfocusAdd.disabled = !active;
 
         if (active) {
           hyperfocusSeconds = 180;
           renderHyperfocusTime();
+          updateHyperfocusActions();
           startHyperfocusTimer();
           return;
         }
@@ -1734,6 +1763,7 @@
         stopHyperfocusTimer();
         hyperfocusSeconds = 180;
         renderHyperfocusTime();
+        updateHyperfocusActions();
       };
 
       hyperfocusBtn.addEventListener("click", () => {
@@ -1742,9 +1772,27 @@
 
       hyperfocusAdd.addEventListener("click", () => {
         if (!hyperfocusActive) return;
+        if (hyperfocusExpired) {
+          hyperfocusSeconds += 30;
+          hyperfocusExpired = false;
+          hyperfocusStatus.textContent = "Ekstra tid lagt til. Kjør på.";
+          renderHyperfocusTime();
+          updateHyperfocusActions();
+          startHyperfocusTimer();
+          return;
+        }
+
         hyperfocusSeconds += 40;
         renderHyperfocusTime();
       });
+
+      hyperfocusPresent.addEventListener("click", () => {
+        if (!hyperfocusActive || !hyperfocusExpired) return;
+        setHyperfocus(false);
+        showPopup("Be present", "Bra valg. Trekk pusten, og kom tilbake når du er klar.", "Hyperfokus");
+      });
+
+      updateHyperfocusActions();
 
       const setWorkmode = (active) => {
         workmodeActive = active;
