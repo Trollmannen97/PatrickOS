@@ -100,8 +100,54 @@
       box-shadow: var(--shadow);
     }
 
+    .widget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .widget-header h2 {
+      margin: 0;
+    }
+
+    .widget-drag {
+      border: 1px dashed #b9ac93;
+      border-radius: 10px;
+      padding: 6px 10px;
+      background: #fff8ea;
+      color: #5c4c32;
+      font-size: 0.75rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: grab;
+    }
+
+    .widget-drag:active {
+      cursor: grabbing;
+    }
+
+    .card.dragging {
+      opacity: 0.55;
+      border-style: dashed;
+    }
+
+    .card.drop-target {
+      outline: 2px solid #2f9f67;
+      outline-offset: 2px;
+    }
+
+    .widget-note {
+      margin: 0 0 10px;
+      color: #6b5d43;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
     .card h2 {
-      margin: 0 0 8px;
+      margin: 0;
       font-size: 1.12rem;
     }
 
@@ -1222,9 +1268,10 @@
     </div>
   </aside>
 
-  <main class="layout">
-    <section class="card" aria-labelledby="speed-title">
-      <h2 id="speed-title">60-sekunders Speed Mode</h2>
+  <main class="layout" id="widgetsLayout">
+    <p class="widget-note">Tips: Dra "Flytt" på kortene for å omorganisere rutene.</p>
+    <section class="card" id="speedCard" aria-labelledby="speed-title">
+      <div class="widget-header"><h2 id="speed-title">60-sekunders Speed Mode</h2><button class="widget-drag" type="button">Flytt</button></div>
       <p>Løs så mange oppgaver du klarer på 60 sekunder.</p>
 
       <div class="row">
@@ -1241,15 +1288,15 @@
       </div>
     </section>
 
-    <section class="card" aria-labelledby="reaction-title">
-      <h2 id="reaction-title">Reaction Time</h2>
+    <section class="card" id="reactionCard" aria-labelledby="reaction-title">
+      <div class="widget-header"><h2 id="reaction-title">Reaction Time</h2><button class="widget-drag" type="button">Flytt</button></div>
       <p>Trykk start. Vent. Klikk når det står <b>KLIKK!</b> (ikke før).</p>
       <button id="reactionBtn" class="primary reaction-btn" type="button">Start</button>
       <div class="small" style="margin-top: 10px;" id="reactionResult">Siste: -</div>
     </section>
 
-    <section class="card" aria-labelledby="sudoku-title">
-      <h2 id="sudoku-title">Sudoku Generator</h2>
+    <section class="card" id="sudokuCard" aria-labelledby="sudoku-title">
+      <div class="widget-header"><h2 id="sudoku-title">Sudoku Generator</h2><button class="widget-drag" type="button">Flytt</button></div>
       <p>Generer nytt brett, sjekk feil, eller se løsning hvis du gir opp.</p>
 
       <div class="row" style="margin-bottom: 10px;">
@@ -1271,8 +1318,8 @@
       </div>
     </section>
 
-    <section class="card" aria-labelledby="riddle-title">
-      <h2 id="riddle-title">Gåtespill</h2>
+    <section class="card" id="riddleCard" aria-labelledby="riddle-title">
+      <div class="widget-header"><h2 id="riddle-title">Gåtespill</h2><button class="widget-drag" type="button">Flytt</button></div>
       <p>Løs gåter, bruk hint når du står fast, og se hvor mange du tar på rad.</p>
 
       <div class="row">
@@ -1294,8 +1341,8 @@
       <div id="riddleFeedback" class="small" style="margin-top: 10px;">Klar for første gåte.</div>
     </section>
 
-    <section class="card" aria-labelledby="pattern-title">
-      <h2 id="pattern-title">Pattern Pop</h2>
+    <section class="card" id="patternCard" aria-labelledby="pattern-title">
+      <div class="widget-header"><h2 id="pattern-title">Pattern Pop</h2><button class="widget-drag" type="button">Flytt</button></div>
       <p>Se mønsteret, husk rekkefølgen, og trykk rutene i samme orden.</p>
 
       <div class="row">
@@ -1477,6 +1524,81 @@
       let workmodeActive = false;
       let fridayBuffer = "";
       let fridayTimer = null;
+      const widgetLayout = byId("widgetsLayout");
+      const WIDGET_ORDER_KEY = "patrick_widget_order_v1";
+
+      const initWidgetLayout = () => {
+        if (!widgetLayout) return;
+        const draggableCards = Array.from(widgetLayout.querySelectorAll(".card:not(#leaderboardCard)"));
+        if (!draggableCards.length) return;
+
+        const getOrder = () => draggableCards.map((card) => card.id).filter(Boolean);
+        const saveOrder = () => localStorage.setItem(WIDGET_ORDER_KEY, JSON.stringify(getOrder()));
+
+        const savedOrderRaw = localStorage.getItem(WIDGET_ORDER_KEY);
+        if (savedOrderRaw) {
+          try {
+            const savedOrder = JSON.parse(savedOrderRaw);
+            for (const cardId of savedOrder) {
+              const card = byId(cardId);
+              if (card) widgetLayout.appendChild(card);
+            }
+          } catch (_error) {
+            localStorage.removeItem(WIDGET_ORDER_KEY);
+          }
+        }
+
+        let draggedCard = null;
+
+        for (const card of draggableCards) {
+          const dragBtn = card.querySelector(".widget-drag");
+          if (!dragBtn) continue;
+
+          dragBtn.draggable = true;
+          dragBtn.setAttribute("aria-label", "Flytt denne ruten");
+
+          dragBtn.addEventListener("dragstart", (event) => {
+            draggedCard = card;
+            card.classList.add("dragging");
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", card.id);
+          });
+
+          dragBtn.addEventListener("dragend", () => {
+            card.classList.remove("dragging");
+            for (const dropCard of draggableCards) {
+              dropCard.classList.remove("drop-target");
+            }
+            if (draggedCard) saveOrder();
+            draggedCard = null;
+          });
+
+          card.addEventListener("dragover", (event) => {
+            if (!draggedCard || draggedCard === card) return;
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "move";
+            card.classList.add("drop-target");
+          });
+
+          card.addEventListener("dragleave", () => {
+            card.classList.remove("drop-target");
+          });
+
+          card.addEventListener("drop", (event) => {
+            if (!draggedCard || draggedCard === card) return;
+            event.preventDefault();
+            card.classList.remove("drop-target");
+            const { top, height } = card.getBoundingClientRect();
+            const isAfter = event.clientY > top + height / 2;
+            if (isAfter) {
+              card.after(draggedCard);
+            } else {
+              card.before(draggedCard);
+            }
+            saveOrder();
+          });
+        }
+      };
 
       const showPopup = (title, body, sub = "PatrickOS", options = {}) => {
         const moodMode = Boolean(options.moodMode);
@@ -2511,6 +2633,7 @@
         if (els.rageOverlay.style.display === "flex") closeRage();
       });
 
+      initWidgetLayout();
       newSudoku();
     });
   </script>
